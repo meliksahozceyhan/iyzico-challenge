@@ -1,4 +1,4 @@
- ignore all idea settings
+ignore all idea settings
 .idea/*
 *.iws
 *.iml
@@ -23,3 +23,4 @@
 
 # enable checkstyle ide
 !.idea/checkstyle-idea.xml
+/.idea/
