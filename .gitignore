@@ -24,3 +24,4 @@ ignore all idea settings
 # enable checkstyle ide
 !.idea/checkstyle-idea.xml
 /.idea/
+/target/*
