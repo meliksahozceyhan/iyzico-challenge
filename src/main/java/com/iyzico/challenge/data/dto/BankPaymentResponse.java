@@ -1,4 +1,4 @@
-package com.iyzico.challenge.service;
+package com.iyzico.challenge.data.dto;
 
 public class BankPaymentResponse {
 
