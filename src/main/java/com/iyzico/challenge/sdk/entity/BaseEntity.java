@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 @MappedSuperclass
-public abstract class BaseEntity implements Serializable, Comparable<BaseEntity> {
+public abstract class BaseEntity implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,10 +52,6 @@ public abstract class BaseEntity implements Serializable, Comparable<BaseEntity>
         this.id = id;
     }
 
-    @Override
-    public int compareTo(BaseEntity o) {
-        return this.id.compareTo(o.getId());
-    }
 
     @Override
     public boolean equals(Object o) {
