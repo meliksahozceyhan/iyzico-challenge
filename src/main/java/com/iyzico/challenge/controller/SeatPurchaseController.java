@@ -1,13 +1,12 @@
 package com.iyzico.challenge.controller;
 
+import com.iyzico.challenge.data.dto.BankPaymentResponse;
+import com.iyzico.challenge.data.dto.SeatPurchaseRequestDto;
 import com.iyzico.challenge.sdk.api.ApiResponse;
 import com.iyzico.challenge.service.SeatPurchaseService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/seat/purchase")
@@ -20,8 +19,8 @@ public class SeatPurchaseController {
     }
 
     @PostMapping("/{seatId}")
-    public ResponseEntity<ApiResponse<Long>> purchaseSeat(@PathVariable Long seatId){
+    public ResponseEntity<ApiResponse<BankPaymentResponse>> purchaseSeat(@PathVariable Long seatId, @RequestBody SeatPurchaseRequestDto dto){
         return ResponseEntity.status(HttpStatus.OK)
-                .body(ApiResponse.success(seatPurchaseService.purchaseSeat(seatId).getId(),"seat.purchased"));
+                .body(ApiResponse.success(seatPurchaseService.purchaseSeat(seatId, dto),"seat.purchased"));
     }
 }

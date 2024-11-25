@@ -6,14 +6,10 @@ As part of our interview process, we expect you to complete a coding challenge i
 The challenge is a Java11 + Spring Boot project which uses H2 as the database.
 
 
-# Question 1: Flight Booking System
+# Answer 1: Flight Booking System
 
-Most of iyzico's merchants sell products or services online. Flight ticket is one of these services.
-For flight booking system the necessary REST services are listed below. We kindly ask you to implement them.
 
-## Requirements
-
-* Flight -> adding, removing and updating
+* [FlightController](src/main/java/com/iyzico/challenge/controller/FlightController.java),  adding, removing and updating for Flight Entity, also returns the list of flights with available seats.
 * Seat for existing flight -> adding, removing or updating services. 
 * Flight/Seat listing service which returns flight name, description, available seats and price.
 * Payment service for the end user to buy their selected seat.
@@ -51,6 +47,11 @@ In the simulation for some reason the bank response times take ~5 seconds. Due t
 class displays "Connection is not available, request timed out after 30005ms." error after some time.)
 
 Find a way to persist bank responses to the database in this situation.
+
+## ANSWER 2: Latency Management
+The All you have to do is to remove the transactional annotation at class definition.
+By doing this you tell Hibernate to not to open connection to database when method is called.
+It opens connection when save method called
 
 ## Requirements
 

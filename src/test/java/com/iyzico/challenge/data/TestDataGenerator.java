@@ -1,14 +1,16 @@
 package com.iyzico.challenge.data;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.iyzico.challenge.data.dto.FlightRequestDto;
-import com.iyzico.challenge.data.dto.SeatRequestDto;
+import com.iyzico.challenge.data.dto.*;
 import com.iyzico.challenge.data.view.FlightListView;
 import com.iyzico.challenge.data.view.FlightView;
 import com.iyzico.challenge.data.view.SeatListView;
 import com.iyzico.challenge.data.view.SeatView;
 import com.iyzico.challenge.entity.Flight;
 import com.iyzico.challenge.entity.Seat;
+import com.iyzipay.Options;
+import com.iyzipay.model.*;
+import com.iyzipay.request.CreatePaymentRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 
@@ -274,6 +276,127 @@ public class TestDataGenerator {
         return new PageImpl<>(Collections.singletonList(generateSeatListViewForTest()));
     }
 
+    public AddressDto generateShippingAddressDtoForTest(){
+        AddressDto shippingAddress = new AddressDto();
+        shippingAddress.setContactName("Jane Doe");
+        shippingAddress.setCity("Istanbul");
+        shippingAddress.setCountry("Turkey");
+        shippingAddress.setAddress("Nidakule Göztepe, Merdivenköy Mah. Bora Sok. No:1");
+        shippingAddress.setZipCode("34742");
+        return shippingAddress;
+    }
+
+    public AddressDto generateBillingAddressDtoForTest(){
+        AddressDto billingAddress = new AddressDto();
+        billingAddress.setContactName("Jane Doe");
+        billingAddress.setCity("Istanbul");
+        billingAddress.setCountry("Turkey");
+        billingAddress.setAddress("Nidakule Göztepe, Merdivenköy Mah. Bora Sok. No:1");
+        billingAddress.setZipCode("34742");
+        return billingAddress;
+    }
+
+    public BuyerDto generateBuyerDtoForTest(){
+        BuyerDto buyer = new BuyerDto();
+        buyer.setId("BY789");
+        buyer.setName("John");
+        buyer.setSurname("Doe");
+        buyer.setGsmNumber("+905350000000");
+        buyer.setEmail("email@email.com");
+        buyer.setIdentityNumber("74300864791");
+        buyer.setLastLoginDate("2015-10-05 12:43:35");
+        buyer.setRegistrationDate("2013-04-21 15:12:09");
+        buyer.setRegistrationAddress("Nidakule Göztepe, Merdivenköy Mah. Bora Sok. No:1");
+        buyer.setIp("85.34.78.112");
+        buyer.setCity("Istanbul");
+        buyer.setCountry("Turkey");
+        buyer.setZipCode("34732");
+        return buyer;
+    }
+
+    public PaymentCardDto generatePaymentCardDtoForTest(){
+        PaymentCardDto paymentCard = new PaymentCardDto();
+        paymentCard.setCardHolderName("John Doe");
+        paymentCard.setCardNumber("5528790000000008");
+        paymentCard.setExpireMonth("12");
+        paymentCard.setExpireYear("2030");
+        paymentCard.setCvc("123");
+        return paymentCard;
+    }
+
+    public SeatPurchaseRequestDto generateSeatPurchaseRequestDtoForTest(){
+        SeatPurchaseRequestDto seatPurchaseRequestDto = new SeatPurchaseRequestDto();
+        seatPurchaseRequestDto.setSeatId(TEST_SEAT_ID);
+        seatPurchaseRequestDto.setBuyer(generateBuyerDtoForTest());
+        seatPurchaseRequestDto.setBillingAddress(generateBillingAddressDtoForTest());
+        seatPurchaseRequestDto.setShippingAddress(generateShippingAddressDtoForTest());
+        seatPurchaseRequestDto.setPaymentCard(generatePaymentCardDtoForTest());
+        return seatPurchaseRequestDto;
+    }
+
+    public PaymentCard generatePaymentCardForTest(){
+        PaymentCard paymentCard = new PaymentCard();
+        paymentCard.setCardHolderName("John Doe");
+        paymentCard.setCardNumber("5528790000000008");
+        paymentCard.setExpireMonth("12");
+        paymentCard.setExpireYear("2030");
+        paymentCard.setCvc("123");
+        paymentCard.setRegisterCard(0);
+        return paymentCard;
+    }
+
+    public Buyer generateBuyerForTest(){
+        Buyer buyer = new Buyer();
+        buyer.setId("BY789");
+        buyer.setName("John");
+        buyer.setSurname("Doe");
+        buyer.setGsmNumber("+905350000000");
+        buyer.setEmail("email@email.com");
+        buyer.setIdentityNumber("74300864791");
+        buyer.setLastLoginDate("2015-10-05 12:43:35");
+        buyer.setRegistrationDate("2013-04-21 15:12:09");
+        buyer.setRegistrationAddress("Nidakule Göztepe, Merdivenköy Mah. Bora Sok. No:1");
+        buyer.setIp("85.34.78.112");
+        buyer.setCity("Istanbul");
+        buyer.setCountry("Turkey");
+        buyer.setZipCode("34732");
+        return buyer;
+    }
+
+    public Address generateShippingAddressForTest(){
+        Address shippingAddress = new Address();
+        shippingAddress.setContactName("Jane Doe");
+        shippingAddress.setCity("Istanbul");
+        shippingAddress.setCountry("Turkey");
+        shippingAddress.setAddress("Nidakule Göztepe, Merdivenköy Mah. Bora Sok. No:1");
+        shippingAddress.setZipCode("34742");
+        return shippingAddress;
+    }
+
+    public Address generateBillingAddressForTest(){
+        Address billingAddress = new Address();
+        billingAddress.setContactName("Jane Doe");
+        billingAddress.setCity("Istanbul");
+        billingAddress.setCountry("Turkey");
+        billingAddress.setAddress("Nidakule Göztepe, Merdivenköy Mah. Bora Sok. No:1");
+        billingAddress.setZipCode("34742");
+        return billingAddress;
+    }
+
+    public BankPaymentResponse generateBankPaymentResponseForTest(){
+        return new BankPaymentResponse("success");
+    }
+    public BasketItem generateBasketItemForTest(){
+        BasketItem basketItem = new BasketItem();
+        basketItem.setId("BI101");
+        basketItem.setName(TEST_SEAT_NUMBER);
+        basketItem.setCategory1("Flight");
+        basketItem.setCategory2("Seat");
+        basketItem.setItemType(BasketItemType.VIRTUAL.name());
+        basketItem.setPrice(TEST_SEAT_PRICE);
+
+        return basketItem;
+    }
     public static String convertToJsonString(final Object obj) {
         try {
             return new ObjectMapper().writeValueAsString(obj);

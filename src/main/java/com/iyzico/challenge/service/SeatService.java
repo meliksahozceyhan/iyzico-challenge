@@ -49,6 +49,7 @@ public class SeatService {
         return seatRepository.save(seatMapper.updateEntity(findSeatById(id), dto));
     }
 
+    @Transactional
     public Seat purchaseSeat(Long id) {
         Seat seat = seatRepository.findSeatByIdForPurchase(id).orElseThrow(() -> new EntityNotFoundException("seat"));
         if (!seat.getAvailable()) throw new SeatPurchasedException("seat.purchased.exception");
