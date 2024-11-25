@@ -1,4 +1,4 @@
-# iyzico coding challenge
+# iyzico coding challenge solution.
 
 Thank you for applying to work in Iyzico Engineering.
 
@@ -9,25 +9,35 @@ The challenge is a Java11 + Spring Boot project which uses H2 as the database.
 # Answer 1: Flight Booking System
 
 
-* [FlightController](src/main/java/com/iyzico/challenge/controller/FlightController.java),  adding, removing and updating for Flight Entity, also returns the list of flights with available seats.
-* Seat for existing flight -> adding, removing or updating services. 
-* Flight/Seat listing service which returns flight name, description, available seats and price.
-* Payment service for the end user to buy their selected seat.
-* A seat should not be sold to two passengers.
-* If there are 2 passengers pay at the same time for the same seat, first successful should buy the seat and the 2nd one should fail with an appropriate message. We expect IT test for this case.
-* No front end is necessary.
-* Test coverage for the implemented service should be above 80%. We expect both Integration and unit tests.
-* We expect Production Grade solution
-* Bonus: Iyzico payment integration can be implemented for payment step. 
-Reference: [https://dev.iyzipay.com/](https://dev.iyzipay.com/)
+* [FlightController](src/main/java/com/iyzico/challenge/controller/FlightController.java), consist of API's that support adding, removing and updating for Flight Entity, also returns the list of flights with available seats.
+* [SeatController](src/main/java/com/iyzico/challenge/controller/SeatController.java) consist of API's that support adding, removing and updating for Seat Entity, For seat to be created There should be a Flight registered on the system.
+* [SeatPurchaseController](src/main/java/com/iyzico/challenge/controller/SeatPurchaseController.java) consist of an API that  helps user by their selected seat. It has an integration with the Iyzico Payment Systems. In request body we take all the necessary information.
+Because currently this application doesn't have a user saving functionality. 
+* With the help of [@Lock](https://docs.spring.io/spring-data/jpa/docs/current/api/org/springframework/data/jpa/repository/Lock.html) annotation, we can disable the access to specific entity on Database Level. By doing so we prevent the sale of the same seat to sold in 2 different transactions.
+* Iyzico Payment Integration can be Found in  [IyzicoPaymentIntegrationService](src/main/java/com/iyzico/challenge/service/IyzicoPaymentIntegrationService.java), IyzicoPaymentClient is a client class so that TestCases can mock the behavior and not fail.
 
 
-# Question 2 : Latency Management
+## ANSWER 2: Latency Management
+The all you have to do is to remove the transactional annotation at class definition.
+By doing this you tell Hibernate to not open connection to database when method is called.
+It opens connection when save method called.
+So the Only change should be this
 
-Iyzico provides its payment service by calling bank endpoints. The bank responses are persisted to database.In [IyzicoPaymentServiceTest.java](src/test/java/com/iyzico/challenge/service/IyzicoPaymentServiceTest.java)
-class we have simulated 100 customers calling the payment service.
+````java
+@Service
+//@Transactional This is for demonstration purposes. Original Code has it removed completely.
+public class IyzicoPaymentService {
 
-```java
+    private Logger logger = LoggerFactory.getLogger(IyzicoPaymentService.class);
+
+    private BankService bankService;
+    private PaymentRepository paymentRepository;
+
+    public IyzicoPaymentService(BankService bankService, PaymentRepository paymentRepository) {
+        this.bankService = bankService;
+        this.paymentRepository = paymentRepository;
+    }
+
     public void pay(BigDecimal price) {
         //pay with bank
         BankPaymentRequest request = new BankPaymentRequest();
@@ -41,24 +51,9 @@ class we have simulated 100 customers calling the payment service.
         paymentRepository.save(payment);
         logger.info("Payment saved successfully!");
     }
-```
 
-In the simulation for some reason the bank response times take ~5 seconds. Due to this latency, a database connection problem is encountered after some time. (Running the [IyzicoPaymentServiceTest.java](src/test/java/com/iyzico/challenge/service/IyzicoPaymentServiceTest.java)
-class displays "Connection is not available, request timed out after 30005ms." error after some time.)
-
-Find a way to persist bank responses to the database in this situation.
-
-## ANSWER 2: Latency Management
-The All you have to do is to remove the transactional annotation at class definition.
-By doing this you tell Hibernate to not to open connection to database when method is called.
-It opens connection when save method called
-
-## Requirements
-
-* DB connection pool must stay the same.
-* DatabaseConfiguration.java, BankService.java, PaymentServiceClients.java and IyzicoPaymentServiceTest.java classes must not be changed.
-* In case of an error, there must not be any inconsistent data in the database.
-
+````
+[IyzicoPaymentService](src/main/java/com/iyzico/challenge/service/IyzicoPaymentService.java) contains the final code. All Tests that are written are passing.
 
 
 
