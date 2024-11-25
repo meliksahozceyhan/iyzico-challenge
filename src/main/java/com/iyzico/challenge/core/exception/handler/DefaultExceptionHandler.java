@@ -5,8 +5,12 @@ import com.iyzico.challenge.core.exception.EntityNotFoundException;
 import com.iyzico.challenge.sdk.api.ApiError;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.Objects;
+
 @RestControllerAdvice
 public class DefaultExceptionHandler {
 
@@ -33,5 +37,10 @@ public class DefaultExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ApiError> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception){
+        ApiError response = ApiError.error(Objects.requireNonNull(exception.getFieldError()).getDefaultMessage(), exception.getObjectName());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
 
 }

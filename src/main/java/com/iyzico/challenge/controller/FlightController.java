@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/api/flights")
 public class FlightController {
@@ -33,13 +35,13 @@ public class FlightController {
     }
 
     @PostMapping()
-    public ResponseEntity<ApiResponse<Long>> saveFlight(@RequestBody FlightRequestDto dto) {
+    public ResponseEntity<ApiResponse<Long>> saveFlight(@RequestBody @Valid FlightRequestDto dto) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.success(flightService.saveFlight(dto).getId(), "flight.created"));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<Long>> updateFlight(@PathVariable Long id, @RequestBody FlightRequestDto dto) {
+    public ResponseEntity<ApiResponse<Long>> updateFlight(@PathVariable Long id, @RequestBody @Valid FlightRequestDto dto) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponse.success(flightService.updateFlight(id, dto).getId(), "flight.updated"));
     }

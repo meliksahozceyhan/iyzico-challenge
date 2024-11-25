@@ -14,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/api/seats")
 public class SeatController {
@@ -38,13 +40,13 @@ public class SeatController {
 
 
     @PostMapping()
-    public ResponseEntity<ApiResponse<Long>> saveSeat(@RequestBody SeatRequestDto dto){
+    public ResponseEntity<ApiResponse<Long>> saveSeat(@RequestBody @Valid SeatRequestDto dto){
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.success(seatService.saveSeat(dto).getId(),"seat.created"));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<Long>> updateSeat(@PathVariable Long id, @RequestBody SeatRequestDto dto){
+    public ResponseEntity<ApiResponse<Long>> updateSeat(@PathVariable Long id, @RequestBody @Valid SeatRequestDto dto){
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponse.success(seatService.updateSeat(id,dto).getId(),"seat.updated"));
     }
