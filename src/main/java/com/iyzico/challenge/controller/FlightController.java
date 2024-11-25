@@ -2,7 +2,6 @@ package com.iyzico.challenge.controller;
 
 import com.iyzico.challenge.data.dto.FlightRequestDto;
 import com.iyzico.challenge.data.view.FlightView;
-import com.iyzico.challenge.entity.Flight;
 import com.iyzico.challenge.sdk.api.ApiResponse;
 import com.iyzico.challenge.service.FlightService;
 import org.springframework.data.domain.Page;
@@ -22,13 +21,13 @@ public class FlightController {
     }
 
     @GetMapping()
-    public ResponseEntity<ApiResponse<Page<FlightView>>> getAllFlightsWithAvailableSeatsAndPaginate(Pageable pageable) {
+    public ResponseEntity<ApiResponse<Page<FlightView>>> getAllAndPaginate(Pageable pageable) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponse.success(flightService.getAllFlightsWithAvailableSeats(pageable), "flight.success"));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<FlightView>> getFlightByIdWithAvailableSeats(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<FlightView>> getOneById(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponse.success(flightService.getFlightWithAvailableSeatsById(id), "flight.success"));
     }
